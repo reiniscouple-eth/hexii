@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HEX II by Reiniscouple</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      height: 100%;
+      font-family: sans-serif;
+    }
+    canvas {
+      display: block;
+    }
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: black;
+      color: white;
+      font-size: 1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      box-sizing: border-box;
+      z-index: 10;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    footer a {
+      background-color: white;
+      color: black;
+      padding: 10px 18px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 1em;
+      white-space: nowrap;
+    }
+    footer a:hover {
+      background-color: #ddd;
+    }
+
+    @media (max-width: 600px) {
+      footer {
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 1.1em;
+      }
+      footer a {
+        font-size: 1.1em;
+        padding: 12px 22px;
+      }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+</head>
+<body>
+<script>
+let hexRadius = 40;
+let frames = 100;
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  pixelDensity(1); // otimização para celular
+  angleMode(RADIANS);
+  colorMode(HSL);
+  noFill();
+  frameRate(60);
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+
+function draw() {
+  background(0);
+  let t = (frameCount % frames) / frames;
+  let rotation = TWO_PI * t;
+
+  let spacingScale = windowWidth < 600 ? 1.2 : 1;
+  let dx = hexRadius * sqrt(3) * spacingScale;
+  let dy = hexRadius * 1.5 * spacingScale;
+
+  for (let row = -1; row < height / dy + 2; row++) {
+    for (let col = -1; col < width / dx + 2; col++) {
+      let x = col * dx;
+      let y = row * dy;
+      if (row % 2 === 1) x += dx / 2;
+
+      let wave = sin((x + y) * 0.01 + t * TWO_PI);
+      let hue = map(wave, -1, 1, 180, 360);
+      stroke(hue, 100, 70);
+      drawHexagon(x, y, hexRadius, rotation);
+    }
+  }
+}
+
+function drawHexagon(x, y, r, rotation) {
+  beginShape();
+  for (let i = 0; i < 6; i++) {
+    let angle = TWO_PI / 6 * i + PI / 6 + rotation;
+    let vx = x + cos(angle) * r;
+    let vy = y + sin(angle) * r;
+    vertex(vx, vy);
+  }
+  endShape(CLOSE);
+}
+</script>
+
+<footer>
+  <div>HEX II by Reiniscouple and Dreamsbender</div>
+  <div class="buttons">
+    <a href="https://zora.co/coin/base:0x54f2b677f0dc7b9e4cefb9f1b7959357ceae72a2?referrer=0xED88ec5Ae50dC47049ab85BbFEF98d38346daac4" target="_blank">TRADE HERE</a>
+    <a href="https://dexscreener.com/base/0x2e685368582d26E15f8D6d3c4D0307170dF045a1" target="_blank">CHART</a>
+  </div>
+</footer>
+
+</body>
+</html>
